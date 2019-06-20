@@ -1,21 +1,29 @@
 'use strict';
 
 const express = require('express');
-const socketIO = require('socket.io');
 const path = require('path');
+const { PServer } = require('./pserver');
 
 const PORT = process.env.PORT || 3000;
-const INDEX = path.join(__dirname, 'index.html');
 
-const server = express()
-  .use((req, res) => res.sendFile(INDEX) )
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+function buildFile(url) {
+    if(url === '/') {
+        return path.join(__dirname, 'client/index.html');
+    }
+    else {
+        return path.join(__dirname, url);
+    }
+}
 
-const io = socketIO(server);
 
-io.on('connection', (socket) => {
-  console.log('Client connected');
-  socket.on('disconnect', () => console.log('Client disconnected'));
-});
+// TODO: Need to serve the proper file (not just always index.html)
+function serveResponse(req, res) {
+    console.log(req.url);
+    res.sendFile(buildFile(req.url));
+}
 
-setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+const pServer = new PServer(express()
+    .use(serveResponse)
+    .listen(PORT, () => console.log(`Listening on ${ PORT }`)));
+
+setInterval(() => pServer.io.emit('time', new Date().toTimeString()), 1000);
