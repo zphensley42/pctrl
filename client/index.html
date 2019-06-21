@@ -1,5 +1,30 @@
 <html>
     <p id='server-time'></p>
+
+    <select id="intent-select">
+      <option value="Greeting">Greeting</option>
+      <option value="Camera">Camera</option>
+      <option value="Timer">Timer</option>
+      <option value="Weather">Weather</option>
+      <option value="ChangeGlasses">ChangeGlasses</option>
+      <option value="Goodbye">Goodbye</option>
+      <option value="KittyTime">KittyTime</option>
+      <option value="HueGroup">HueGroup</option>
+      <option value="HueLight">HueLight</option>
+      <option value="Patrick">Patrick</option>
+    </select>
+
+    <div id="slots-div">
+      <label for="slot1" id="slot1label">Slot 1</label>
+      <input type="text" id="slot1"/><br/>
+
+      <label for="slot2" id="slot2label">Slot 2</label>
+      <input type="text" id="slot2"/><br/>
+
+      <label for="slot3" id="slot3label">Slot 3</label>
+      <input type="text" id="slot3"/><br/>
+    </div>
+
     <input id='testIntentBtn' type="button" value="Test Intent">
 
     <script src="/socket.io/socket.io.js"></script>
