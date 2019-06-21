@@ -9,5 +9,11 @@ socket.on('time', function(timeString) {
 let intentBtn = document.getElementById('testIntentBtn');
 console.log(intentBtn);
 intentBtn.onclick = () => {
-    socket.emit('message', {'cmd': 'KittyTime'});
+    socket.emit('message', {
+        cmd : {
+            intent: {
+                'intentName': 'zphensley42:KittyTime'
+            }
+        }
+    });
 };
