@@ -4,11 +4,7 @@ const crypto = require('crypto');
 const botName = 'Peeqo';
 
 class TeamsHook {
-    constructor(res) {
-        this.response = res;
-
-        // this.sharedSecret = process.env.TEAMS_SEC;
-        // this.bufSecret = Buffer(this.sharedSecret, "base64");
+    constructor(pServer) {
         this.commands = [
             'Greeting',
             'Camera',
@@ -22,6 +18,11 @@ class TeamsHook {
             'Patrick',
             'GitHub'
         ];
+
+        this.sharedSecret = process.env.TEAMS_SEC;
+        this.bufSecret = Buffer(this.sharedSecret, "base64");
+
+        this.pServer = pServer;
     }
 
     validCommand(cmd) {
@@ -39,7 +40,8 @@ class TeamsHook {
         return msgHash === auth;
     }
 
-    handle(request) {
+    handle(request, response) {
+
         let payload = '';
 
         let onDataFunc = function (data) {
@@ -71,6 +73,31 @@ class TeamsHook {
                             text: "Command found",
                             command: `${receivedCommand}`
                         };
+
+                        this.pServer.emit('command', {
+                            cmd: {
+                                intent: {
+                                    intentName: `${receivedCommand}`
+                                },
+                                slots: [
+                                    {
+                                        value: {
+                                            value: ''
+                                        }
+                                    },
+                                    {
+                                        value: {
+                                            value: ''
+                                        }
+                                    },
+                                    {
+                                        value: {
+                                            value: ''
+                                        }
+                                    }
+                                ]
+                            }
+                        });
                     }
                     else {
                         responseJson = {
@@ -78,13 +105,13 @@ class TeamsHook {
                         };
                     }
                 }
-                this.response.writeHead(200);
-                this.response.write(JSON.stringify(responseJson));
-                this.response.end();
+                response.writeHead(200);
+                response.write(JSON.stringify(responseJson));
+                response.end();
             }
             catch (err) {
-                this.response.writeHead(400);
-                return this.response.end("Error: " + err + "\n" + err.stack);
+                response.writeHead(400);
+                return response.end("Error: " + err + "\n" + err.stack);
             }
         };
         onEndFunc = onEndFunc.bind(this);

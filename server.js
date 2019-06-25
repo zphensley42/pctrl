@@ -33,4 +33,7 @@ const pServer = new PServer(express()
     .use(serveResponse)
     .listen(PORT, () => console.log(`Listening on ${ PORT }`)));
 
+// Register hooks
+const teamsHook = new TeamsHook(pServer);
+
 setInterval(() => pServer.io.emit('time', new Date().toTimeString()), 1000);

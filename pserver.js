@@ -1,8 +1,10 @@
 'use strict';
 const socketIO = require('socket.io');
+const EventEmitter = require( 'events' );
 
-class PServer {
+class PServer extends EventEmitter {
     constructor(server) {
+        super();
         this.io = socketIO(server);
         this.pclient = null;
 
@@ -13,6 +15,40 @@ class PServer {
         let boundOnConnected = this.onConnected;
         boundOnConnected = boundOnConnected.bind(this);
         this.io.on('connection', boundOnConnected);
+
+        this.on('command', function (command) {
+            if(this.pclient != null) {
+                let cmd = command.cmd;
+                let slot1 = command.slots[0].value;
+                let slot2 = command.slots[1].value;
+                let slot3 = command.slots[2].value;
+
+                this.pclient.emit('message', {
+                    cmd : {
+                        intent: {
+                            'intentName': `zphensley42:${cmd}`
+                        },
+                        slots: [
+                            {
+                                value: {
+                                    value: `${slot1.value}`
+                                }
+                            },
+                            {
+                                value: {
+                                    value: `${slot2.value}`
+                                }
+                            },
+                            {
+                                value: {
+                                    value: `${slot3.value}`
+                                }
+                            }
+                        ]
+                    }
+                });
+            }
+        });
     }
 
     onConnected(socket) {
