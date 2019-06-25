@@ -21,6 +21,8 @@ class TeamsHook {
 
         this.sharedSecret = process.env.TEAMS_SEC;
         this.bufSecret = Buffer(this.sharedSecret, "base64");
+
+        this.cmdRegex = /.*Peeqo.*[;\s+](.*)\n/;
     }
 
     register(pServer) {
@@ -28,6 +30,9 @@ class TeamsHook {
     }
 
     validCommand(cmd) {
+        if(cmd == null) {
+            return false;
+        }
         return this.commands.indexOf(cmd) !== -1;
     }
 
@@ -69,7 +74,9 @@ class TeamsHook {
                     console.log(receivedMsg);
 
                     // Determine what command to send
-                    let receivedCommand = receivedMsg.text.replace(botName + ' ', '');
+                    let m = receivedMsg.text.match(this.cmdRegex);
+                    let receivedCommand = m != null && m.length >= 2 ? m[1] : null;
+
                     if(validCommandFunc(receivedCommand)) {
                         responseJson = {
                             text: "Command found",
