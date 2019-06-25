@@ -20,10 +20,10 @@ class PServer extends EventEmitter {
             console.log(`Command received: ${JSON.stringify(command)}`);
 
             if(this.pclient != null) {
-                let cmd = command.cmd;
-                let slot1 = command.slots[0].value;
-                let slot2 = command.slots[1].value;
-                let slot3 = command.slots[2].value;
+                let cmd = command.cmd.intent.intentName;
+                let slot1 = command.cmd.slots[0].value;
+                let slot2 = command.cmd.slots[1].value;
+                let slot3 = command.cmd.slots[2].value;
 
                 console.log('Emitting command to pclient');
                 this.pclient.emit('message', {
