@@ -28,7 +28,7 @@ class TeamsHook {
 
                 if (msgHash === auth) {
                     var receivedMsg = JSON.parse(payload);
-                    var responseMsg = '{ "type": "message", "text": "You typed: ' + receivedMsg.text + '" }';
+                    var responseMsg = '{ "type": "message", "text": "You typed: ' + receivedMsg.text +  '" + "https://media.giphy.com/media/xU9TT471DTGJq/giphy.gif" }';
                 } else {
                     var responseMsg = '{ "type": "message", "text": "Error: message sender cannot be authenticated." }';
                 }
