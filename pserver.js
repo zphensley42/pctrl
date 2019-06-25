@@ -17,7 +17,7 @@ class PServer extends EventEmitter {
         this.io.on('connection', boundOnConnected);
 
         this.on('command', function (command) {
-            console.log(`Command received: ${command}`);
+            console.log(`Command received: ${JSON.stringify(command)}`);
 
             if(this.pclient != null) {
                 let cmd = command.cmd;
