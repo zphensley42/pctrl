@@ -17,12 +17,14 @@ function buildFile(url) {
 }
 
 
-// TODO: Need to serve the proper file (not just always index.html)
+// Define hooks
+const teamsHook = new TeamsHook();
+
 function serveResponse(req, res) {
     console.log(req.url);
 
     if(req.url.includes('/hook')) {
-        new TeamsHook(res).handle(req);
+        teamsHook.handle(req, res);
     }
     else {
         res.sendFile(buildFile(req.url));
@@ -33,7 +35,7 @@ const pServer = new PServer(express()
     .use(serveResponse)
     .listen(PORT, () => console.log(`Listening on ${ PORT }`)));
 
-// Register hooks
-const teamsHook = new TeamsHook(pServer);
+// Register hooks with the server
+teamsHook.register(pServer);
 
 setInterval(() => pServer.io.emit('time', new Date().toTimeString()), 1000);

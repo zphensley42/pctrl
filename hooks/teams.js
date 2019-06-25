@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const botName = 'Peeqo';
 
 class TeamsHook {
-    constructor(pServer) {
+    constructor() {
         this.commands = [
             'Greeting',
             'Camera',
@@ -21,7 +21,9 @@ class TeamsHook {
 
         this.sharedSecret = process.env.TEAMS_SEC;
         this.bufSecret = Buffer(this.sharedSecret, "base64");
+    }
 
+    register(pServer) {
         this.pServer = pServer;
     }
 
@@ -74,30 +76,32 @@ class TeamsHook {
                             command: `${receivedCommand}`
                         };
 
-                        this.pServer.emit('command', {
-                            cmd: {
-                                intent: {
-                                    intentName: `${receivedCommand}`
-                                },
-                                slots: [
-                                    {
-                                        value: {
-                                            value: ''
-                                        }
+                        if(this.pServer != null) {
+                            this.pServer.emit('command', {
+                                cmd: {
+                                    intent: {
+                                        intentName: `${receivedCommand}`
                                     },
-                                    {
-                                        value: {
-                                            value: ''
+                                    slots: [
+                                        {
+                                            value: {
+                                                value: ''
+                                            }
+                                        },
+                                        {
+                                            value: {
+                                                value: ''
+                                            }
+                                        },
+                                        {
+                                            value: {
+                                                value: ''
+                                            }
                                         }
-                                    },
-                                    {
-                                        value: {
-                                            value: ''
-                                        }
-                                    }
-                                ]
-                            }
-                        });
+                                    ]
+                                }
+                            });
+                        }
                     }
                     else {
                         responseJson = {
