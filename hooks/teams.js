@@ -78,12 +78,14 @@ class TeamsHook {
                     let receivedCommand = m != null && m.length >= 2 ? m[1] : null;
 
                     if(validCommandFunc(receivedCommand)) {
+                        console.log(`command found: ${receivedCommand}`);
                         responseJson = {
                             text: "Command found",
                             command: `${receivedCommand}`
                         };
 
                         if(this.pServer != null) {
+                            console.log('Emitting command to pServer');
                             this.pServer.emit('command', {
                                 cmd: {
                                     intent: {

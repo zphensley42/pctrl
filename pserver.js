@@ -17,12 +17,15 @@ class PServer extends EventEmitter {
         this.io.on('connection', boundOnConnected);
 
         this.on('command', function (command) {
+            console.log(`Command received: ${command}`);
+
             if(this.pclient != null) {
                 let cmd = command.cmd;
                 let slot1 = command.slots[0].value;
                 let slot2 = command.slots[1].value;
                 let slot3 = command.slots[2].value;
 
+                console.log('Emitting command to pclient');
                 this.pclient.emit('message', {
                     cmd : {
                         intent: {
