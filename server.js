@@ -1,5 +1,6 @@
 'use strict';
 
+const { TeamsHook } = require('./hooks/teams');
 const express = require('express');
 const path = require('path');
 const { PServer } = require('./pserver');
@@ -19,7 +20,13 @@ function buildFile(url) {
 // TODO: Need to serve the proper file (not just always index.html)
 function serveResponse(req, res) {
     console.log(req.url);
-    res.sendFile(buildFile(req.url));
+
+    if(req.url.includes('/hook')) {
+        new TeamsHook(res).handle(req);
+    }
+    else {
+        res.sendFile(buildFile(req.url));
+    }
 }
 
 const pServer = new PServer(express()
