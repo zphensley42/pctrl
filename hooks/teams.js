@@ -6,8 +6,8 @@ class TeamsHook {
     constructor(res) {
         this.response = res;
 
-        this.sharedSecret = process.env.TEAMS_SEC;
-        this.bufSecret = Buffer(this.sharedSecret, "base64");
+        // this.sharedSecret = process.env.TEAMS_SEC;
+        // this.bufSecret = Buffer(this.sharedSecret, "base64");
     }
 
     handle(request) {
@@ -21,17 +21,17 @@ class TeamsHook {
         let onEndFunc = function() {
             try {
                 // Retrieve authorization HMAC information
-                var auth = request.headers['authorization'];
+                // var auth = request.headers['authorization'];
                 // Calculate HMAC on the message we've received using the shared secret
-                var msgBuf = Buffer.from(payload, 'utf8');
-                var msgHash = "HMAC " + crypto.createHmac('sha256', this.bufSecret).update(msgBuf).digest("base64");
+                // var msgBuf = Buffer.from(payload, 'utf8');
+                // var msgHash = "HMAC " + crypto.createHmac('sha256', this.bufSecret).update(msgBuf).digest("base64");
 
-                if (msgHash === auth) {
+                // if (msgHash === auth) {
                     var receivedMsg = JSON.parse(payload);
-                    var responseMsg = '{ "type": "message", "text": "You typed: ' + receivedMsg.text +  '" + "https://media.giphy.com/media/xU9TT471DTGJq/giphy.gif" }';
-                } else {
-                    var responseMsg = '{ "type": "message", "text": "Error: message sender cannot be authenticated." }';
-                }
+                    var responseMsg = '{ "type": "message", "text": "You typed: ' + receivedMsg.text +  ', have a gif: https://media.giphy.com/media/xU9TT471DTGJq/giphy.gif" }';
+                // } else {
+                //     var responseMsg = '{ "type": "message", "text": "Error: message sender cannot be authenticated." }';
+                // }
                 this.response.writeHead(200);
                 this.response.write(responseMsg);
                 this.response.end();
