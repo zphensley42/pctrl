@@ -24,7 +24,8 @@ class TeamsHook {
             this.bufSecret = Buffer(this.sharedSecret, "base64");
         }
 
-        this.cmdRegex = /.*Peeqo.*-(.*)\n/;
+        this.cmdRegex1 = /(?:[^\s"]+|"[^"]*")+/g;
+        this.cmdRegex2 = /.*--(.*)/;
     }
 
     register(pServer) {
@@ -79,16 +80,16 @@ class TeamsHook {
                     console.log(receivedMsg);
 
                     // Determine what command to send
-                    let m = receivedMsg.text.match(this.cmdRegex);
-                    let receivedCommand = m != null && m.length >= 2 ? m[1] : null;
-                    let vals = receivedCommand.split(',');
-                    let command = vals[0];
-                    let slot1 = vals.length >= 2 ? vals[1] : '';
-                    let slot2 = vals.length >= 3 ? vals[2] : '';
-                    let slot3 = vals.length >= 4 ? vals[3] : '';
+                    let match = receivedMsg.text.match(this.cmdRegex1);
+                    let cmdMatch = match[0].match(this.cmdRegex2);
+                    let command = cmdMatch != null && cmdMatch.length >= 2 ? cmdMatch[1] : '';
+                    let slot1 = match.length >= 2 ? match[1] : '';
+                    let slot2 = match.length >= 3 ? match[2] : '';
+                    let slot3 = match.length >= 4 ? match[3] : '';
+                    slot1 = slot1.replace(/"/g, '');
+                    slot2 = slot2.replace(/"/g, '');
+                    slot3 = slot3.replace(/"/g, '');
 
-                    console.log(`receivedCommand: ${receivedCommand}`);
-                    console.log(`vals: ${vals}`);
                     console.log(`command: ${command}, slot1: ${slot1}, slot2: ${slot2}, slot3: ${slot3}`);
 
                     if(command === 'help') {
@@ -97,10 +98,9 @@ class TeamsHook {
                         };
                     }
                     else if(validCommandFunc(command)) {
-                        console.log(`command found: ${receivedCommand}`);
                         responseJson = {
                             text: `Command found: ${command}, slot1: ${slot1}, slot2: ${slot2}, slot3: ${slot3}`,
-                            command: `${receivedCommand}`
+                            command: `${command}`
                         };
 
                         if(this.pServer != null) {
