@@ -1,7 +1,6 @@
 'use strict';
 
 const crypto = require('crypto');
-const botName = 'Peeqo';
 
 class TeamsHook {
     constructor() {
@@ -86,25 +85,26 @@ class TeamsHook {
 
                         if(this.pServer != null) {
                             console.log('Emitting command to pServer');
+                            let vals = receivedCommand.split(',');
                             this.pServer.emit('command', {
                                 cmd: {
                                     intent: {
-                                        intentName: `${receivedCommand}`
+                                        intentName: `${vals[0]}`
                                     },
                                     slots: [
                                         {
                                             value: {
-                                                value: ''
+                                                value: `${vals.length >= 2 ? vals[1] : ''}`
                                             }
                                         },
                                         {
                                             value: {
-                                                value: ''
+                                                value: `${vals.length >= 3 ? vals[2] : ''}`
                                             }
                                         },
                                         {
                                             value: {
-                                                value: ''
+                                                value: `${vals.length >= 4 ? vals[3] : ''}`
                                             }
                                         }
                                     ]
