@@ -75,36 +75,40 @@ class TeamsHook {
                     // Determine what command to send
                     let m = receivedMsg.text.match(this.cmdRegex);
                     let receivedCommand = m != null && m.length >= 2 ? m[1] : null;
+                    let vals = receivedCommand.split(',');
+                    let command = vals[0];
+                    let slot1 = vals.length >= 2 ? vals[1] : '';
+                    let slot2 = vals.length >= 3 ? vals[2] : '';
+                    let slot3 = vals.length >= 4 ? vals[3] : '';
 
-                    if(validCommandFunc(receivedCommand)) {
+                    if(validCommandFunc(command)) {
                         console.log(`command found: ${receivedCommand}`);
                         responseJson = {
-                            text: "Command found",
+                            text: `Command found: ${command}, slot1: ${slot1}, slot2: ${slot2}, slot3: ${slot3}`,
                             command: `${receivedCommand}`
                         };
 
                         if(this.pServer != null) {
                             console.log('Emitting command to pServer');
-                            let vals = receivedCommand.split(',');
                             this.pServer.emit('command', {
                                 cmd: {
                                     intent: {
-                                        intentName: `${vals[0]}`
+                                        intentName: `${command}`
                                     },
                                     slots: [
                                         {
                                             value: {
-                                                value: `${vals.length >= 2 ? vals[1] : ''}`
+                                                value: `${slot1}`
                                             }
                                         },
                                         {
                                             value: {
-                                                value: `${vals.length >= 3 ? vals[2] : ''}`
+                                                value: `${slot2}`
                                             }
                                         },
                                         {
                                             value: {
-                                                value: `${vals.length >= 4 ? vals[3] : ''}`
+                                                value: `${slot3}`
                                             }
                                         }
                                     ]
