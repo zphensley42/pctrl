@@ -1,6 +1,7 @@
 'use strict';
 
 const crypto = require('crypto');
+const DBG_MODE=false;
 
 class TeamsHook {
     constructor() {
@@ -18,10 +19,12 @@ class TeamsHook {
             'GitHub'
         ];
 
-        this.sharedSecret = process.env.TEAMS_SEC;
-        this.bufSecret = Buffer(this.sharedSecret, "base64");
+        if(!DBG_MODE) {
+            this.sharedSecret = process.env.TEAMS_SEC;
+            this.bufSecret = Buffer(this.sharedSecret, "base64");
+        }
 
-        this.cmdRegex = /.*Peeqo.*[;\s+](.*)\n/;
+        this.cmdRegex = /.*Peeqo.*-(.*)\n/;
     }
 
     register(pServer) {
@@ -36,6 +39,9 @@ class TeamsHook {
     }
 
     validateAuth(payload, request) {
+        if(DBG_MODE) {
+            return true;
+        }
         // Retrieve authorization HMAC information
         let auth = request.headers['authorization'];
 
@@ -80,6 +86,10 @@ class TeamsHook {
                     let slot1 = vals.length >= 2 ? vals[1] : '';
                     let slot2 = vals.length >= 3 ? vals[2] : '';
                     let slot3 = vals.length >= 4 ? vals[3] : '';
+
+                    console.log(`receivedCommand: ${receivedCommand}`);
+                    console.log(`vals: ${vals}`);
+                    console.log(`command: ${command}, slot1: ${slot1}, slot2: ${slot2}, slot3: ${slot3}`);
 
                     if(command === 'help') {
                         responseJson = {
