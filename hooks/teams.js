@@ -81,7 +81,12 @@ class TeamsHook {
                     let slot2 = vals.length >= 3 ? vals[2] : '';
                     let slot3 = vals.length >= 4 ? vals[3] : '';
 
-                    if(validCommandFunc(command)) {
+                    if(command === 'help') {
+                        responseJson = {
+                            text: `Commands: ${this.commands.join('\n')}`,
+                        };
+                    }
+                    else if(validCommandFunc(command)) {
                         console.log(`command found: ${receivedCommand}`);
                         responseJson = {
                             text: `Command found: ${command}, slot1: ${slot1}, slot2: ${slot2}, slot3: ${slot3}`,
