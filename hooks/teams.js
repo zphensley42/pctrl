@@ -16,7 +16,8 @@ class TeamsHook {
             'HueGroup',
             'HueLight',
             'Patrick',
-            'GitHub'
+            'GitHub',
+            'TableFlip'
         ];
 
         if(!DBG_MODE) {
@@ -98,10 +99,18 @@ class TeamsHook {
                         };
                     }
                     else if(validCommandFunc(command)) {
-                        responseJson = {
-                            text: `Command found: ${command}, slot1: ${slot1}, slot2: ${slot2}, slot3: ${slot3}`,
-                            command: `${command}`
-                        };
+                        // TODO: Treat each command's response individually via some class method
+                        if(command === 'TableFlip') {
+                            responseJson = {
+                                text: '(╯°□°)╯︵ ┻━┻'
+                            };
+                        }
+                        else {
+                            responseJson = {
+                                text: `Command found: ${command}, slot1: ${slot1}, slot2: ${slot2}, slot3: ${slot3}`,
+                                command: `${command}`
+                            };
+                        }
 
                         if(this.pServer != null) {
                             console.log('Emitting command to pServer');
