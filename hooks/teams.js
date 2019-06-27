@@ -26,7 +26,6 @@ class TeamsHook {
         }
 
         this.cmdRegex1 = /(?:[^\s"]+|"[^"]*")+/g;
-        this.cmdRegex2 = /.*--(.*)/;
     }
 
     register(pServer) {
@@ -82,11 +81,10 @@ class TeamsHook {
 
                     // Determine what command to send
                     let match = receivedMsg.text.match(this.cmdRegex1);
-                    let cmdMatch = match[0].match(this.cmdRegex2);
-                    let command = cmdMatch != null && cmdMatch.length >= 2 ? cmdMatch[1] : '';
-                    let slot1 = match.length >= 2 ? match[1] : '';
-                    let slot2 = match.length >= 3 ? match[2] : '';
-                    let slot3 = match.length >= 4 ? match[3] : '';
+                    let command = match.length >= 2 ? match[1] : '';
+                    let slot1 = match.length >= 3 ? match[2] : '';
+                    let slot2 = match.length >= 4 ? match[3] : '';
+                    let slot3 = match.length >= 5 ? match[4] : '';
                     slot1 = slot1.replace(/"/g, '');
                     slot2 = slot2.replace(/"/g, '');
                     slot3 = slot3.replace(/"/g, '');
