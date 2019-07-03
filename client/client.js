@@ -13,7 +13,7 @@ socket.on('time', function(timeString) {
     el.innerHTML = 'Server time: ' + timeString;
 });
 
-let noSlots = [ 'ChangeGlasses', 'Goodbye', 'KittyTime', 'Patrick', 'Greeting' ];
+let noSlots = [ 'ChangeGlasses', 'Goodbye', 'KittyTime', 'Patrick', 'Greeting', 'Wakeword' ];
 intentSelect.oninput = () => {
     let exists = noSlots.indexOf(intentSelect.value) !== -1;
     if(exists) {
