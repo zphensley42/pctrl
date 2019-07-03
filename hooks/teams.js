@@ -25,8 +25,6 @@ class TeamsHook {
             this.bufSecret = Buffer(this.sharedSecret, "base64");
         }
 
-        // TODO: Handle case where no space after Peeqo<.*>Command structure
-        // TODO: Just do an indexof for the commands then do regex matching for slots afterwards
         this.cmdRegex1 = /(?:[^\s"]+|"[^"]*")+/g;
     }
 
