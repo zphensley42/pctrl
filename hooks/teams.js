@@ -1,7 +1,7 @@
 'use strict';
 
 const crypto = require('crypto');
-const DBG_MODE=false;
+const DBG_MODE=true;
 
 class TeamsHook {
     constructor() {
@@ -26,6 +26,7 @@ class TeamsHook {
         }
 
         // TODO: Handle case where no space after Peeqo<.*>Command structure
+        // TODO: Just do an indexof for the commands then do regex matching for slots afterwards
         this.cmdRegex1 = /(?:[^\s"]+|"[^"]*")+/g;
     }
 
@@ -54,6 +55,20 @@ class TeamsHook {
         return msgHash === auth;
     }
 
+    startOfCommand(commandText) {
+        let retVal = "";
+        this.commands.forEach((val, index, arr)=>{
+            if(retVal === "") {
+                let start = commandText.indexOf(val);
+                if(start !== -1) {
+                    retVal = commandText.substr(start, commandText.length - start);
+                }
+            }
+        });
+
+        return retVal;
+    }
+
     handle(request, response) {
 
         let payload = '';
@@ -80,12 +95,15 @@ class TeamsHook {
                     let receivedMsg = JSON.parse(payload);
                     console.log(receivedMsg);
 
+                    // First, get the start of our command
+                    let commandStart = this.startOfCommand(receivedMsg.text);
+
                     // Determine what command to send
-                    let match = receivedMsg.text.match(this.cmdRegex1);
-                    let command = match.length >= 2 ? match[1] : '';
-                    let slot1 = match.length >= 3 ? match[2] : '';
-                    let slot2 = match.length >= 4 ? match[3] : '';
-                    let slot3 = match.length >= 5 ? match[4] : '';
+                    let match = commandStart.match(this.cmdRegex1);
+                    let command = match.length >= 1 ? match[0] : '';
+                    let slot1 = match.length >= 2 ? match[1] : '';
+                    let slot2 = match.length >= 3 ? match[2] : '';
+                    let slot3 = match.length >= 4 ? match[3] : '';
                     slot1 = slot1.replace(/"/g, '');
                     slot2 = slot2.replace(/"/g, '');
                     slot3 = slot3.replace(/"/g, '');
