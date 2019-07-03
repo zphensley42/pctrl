@@ -29,30 +29,50 @@ intentBtn.onclick = () => {
 
     let cmd = intentSelect.value;
 
-    socket.emit('message', {
-        cmd : {
-            intent: {
-                'intentName': `zphensley42:${cmd}`
-            },
-            slots: [
-                {
-                    value: {
-                        value: `${slot1.value}`
-                    }
+    if(cmd === "Timer") {
+        socket.emit('message', {
+            cmd : {
+                intent: {
+                    'intentName': `zphensley42:${cmd}`
                 },
-                {
-                    value: {
-                        value: `${slot2.value}`
+                slots: [
+                    {
+                        value: {
+                            hours: `${slot1.value}`,
+                            minutes: `${slot2.value}`,
+                            seconds: `${slot3.value}`
+                        }
                     }
+                ]
+            }
+        });
+    }
+    else {
+        socket.emit('message', {
+            cmd : {
+                intent: {
+                    'intentName': `zphensley42:${cmd}`
                 },
-                {
-                    value: {
-                        value: `${slot3.value}`
+                slots: [
+                    {
+                        value: {
+                            value: `${slot1.value}`
+                        }
+                    },
+                    {
+                        value: {
+                            value: `${slot2.value}`
+                        }
+                    },
+                    {
+                        value: {
+                            value: `${slot3.value}`
+                        }
                     }
-                }
-            ]
-        }
-    });
+                ]
+            }
+        });
+    }
 };
 
 

@@ -25,6 +25,7 @@ class TeamsHook {
             this.bufSecret = Buffer(this.sharedSecret, "base64");
         }
 
+        // TODO: Handle case where no space after Peeqo<.*>Command structure
         this.cmdRegex1 = /(?:[^\s"]+|"[^"]*")+/g;
     }
 
